@@ -1,0 +1,25 @@
+__pycache__/
+*.py[cod]
+.slides-build/
+.chart-data-*/
+*.aux
+*.log
+*.out
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+.DS_Store
+
+# Ambientes locais e arquivos da ferramenta
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+.codex/
+.agents/
+.aws/
+*.tmp
+*~

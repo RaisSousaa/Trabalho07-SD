@@ -1,0 +1,239 @@
+{
+  "modelName": "Computação em nuvem - VMs e fila limitada",
+  "places": [
+    {
+      "name": "NovaTarefa",
+      "id": "p1",
+      "x": 240,
+      "y": 235,
+      "initialMarking": 0,
+      "stringMarking": "0",
+      "initialStringMarking": "0"
+    },
+    {
+      "name": "Fila",
+      "id": "p2",
+      "x": 470,
+      "y": 235,
+      "initialMarking": 0,
+      "stringMarking": "0",
+      "initialStringMarking": "0"
+    },
+    {
+      "name": "VagasFila",
+      "id": "p3",
+      "x": 430,
+      "y": 115,
+      "initialMarking": 20,
+      "stringMarking": "CAP_FILA",
+      "initialStringMarking": "CAP_FILA"
+    },
+    {
+      "name": "VMsLivres",
+      "id": "p4",
+      "x": 715,
+      "y": 115,
+      "initialMarking": 3,
+      "stringMarking": "NUM_VMS",
+      "initialStringMarking": "NUM_VMS"
+    },
+    {
+      "name": "EmProcessamento",
+      "id": "p5",
+      "x": 705,
+      "y": 235,
+      "initialMarking": 0,
+      "stringMarking": "0",
+      "initialStringMarking": "0"
+    }
+  ],
+  "transitions": [
+    {
+      "name": "Chegada",
+      "id": "t1",
+      "x": 115,
+      "y": 235,
+      "type": "TIMED",
+      "priority": 1,
+      "inputArcs": [],
+      "outputArcs": [
+        {
+          "type": "OUTPUT",
+          "place": "NovaTarefa",
+          "multiplicity": 1
+        }
+      ],
+      "inhibitorArcs": [],
+      "firingPolicy": "SINGLE_SERVER",
+      "raceType": "RACE_WITH_ENABLING_MEMORY",
+      "distribution": {
+        "type": "exponential",
+        "parameters": {
+          "Mean delay": "1 / TAXA_CHEGADA"
+        }
+      }
+    },
+    {
+      "name": "Admitir",
+      "id": "t2",
+      "x": 350,
+      "y": 235,
+      "type": "IMMEDIATE",
+      "priority": 1,
+      "inputArcs": [
+        {
+          "type": "INPUT",
+          "place": "NovaTarefa",
+          "multiplicity": 1
+        },
+        {
+          "type": "INPUT",
+          "place": "VagasFila",
+          "multiplicity": 1
+        }
+      ],
+      "outputArcs": [
+        {
+          "type": "OUTPUT",
+          "place": "Fila",
+          "multiplicity": 1
+        }
+      ],
+      "inhibitorArcs": [],
+      "weight": 1
+    },
+    {
+      "name": "Descartar",
+      "id": "t3",
+      "x": 280,
+      "y": 365,
+      "type": "IMMEDIATE",
+      "priority": 1,
+      "inputArcs": [
+        {
+          "type": "INPUT",
+          "place": "NovaTarefa",
+          "multiplicity": 1
+        }
+      ],
+      "outputArcs": [],
+      "inhibitorArcs": [
+        {
+          "type": "INHIBITOR",
+          "place": "VagasFila",
+          "multiplicity": 1
+        }
+      ],
+      "weight": 1
+    },
+    {
+      "name": "Iniciar",
+      "id": "t4",
+      "x": 585,
+      "y": 235,
+      "type": "IMMEDIATE",
+      "priority": 1,
+      "inputArcs": [
+        {
+          "type": "INPUT",
+          "place": "Fila",
+          "multiplicity": 1
+        },
+        {
+          "type": "INPUT",
+          "place": "VMsLivres",
+          "multiplicity": 1
+        }
+      ],
+      "outputArcs": [
+        {
+          "type": "OUTPUT",
+          "place": "EmProcessamento",
+          "multiplicity": 1
+        },
+        {
+          "type": "OUTPUT",
+          "place": "VagasFila",
+          "multiplicity": 1
+        }
+      ],
+      "inhibitorArcs": [],
+      "weight": 1
+    },
+    {
+      "name": "Concluir",
+      "id": "t5",
+      "x": 845,
+      "y": 235,
+      "type": "TIMED",
+      "priority": 1,
+      "inputArcs": [
+        {
+          "type": "INPUT",
+          "place": "EmProcessamento",
+          "multiplicity": 1
+        }
+      ],
+      "outputArcs": [
+        {
+          "type": "OUTPUT",
+          "place": "VMsLivres",
+          "multiplicity": 1
+        }
+      ],
+      "inhibitorArcs": [],
+      "firingPolicy": "INFINITE_SERVER",
+      "raceType": "RACE_WITH_ENABLING_MEMORY",
+      "distribution": {
+        "type": "exponential",
+        "parameters": {
+          "Mean delay": "TEMPO_SERVICO"
+        }
+      }
+    }
+  ],
+  "definitions": [
+    {
+      "name": "TAXA_CHEGADA",
+      "type": "DOUBLE",
+      "value": 20.0
+    },
+    {
+      "name": "TEMPO_SERVICO",
+      "type": "DOUBLE",
+      "value": 0.1
+    },
+    {
+      "name": "NUM_VMS",
+      "type": "INTEGER",
+      "value": 3
+    },
+    {
+      "name": "CAP_FILA",
+      "type": "INTEGER",
+      "value": 20
+    }
+  ],
+  "rewardMeasures": [
+    {
+      "name": "TP",
+      "expression": "E{#EmProcessamento} / TEMPO_SERVICO"
+    },
+    {
+      "name": "MRT",
+      "expression": "(E{#Fila} + E{#EmProcessamento}) / (E{#EmProcessamento} / TEMPO_SERVICO)"
+    },
+    {
+      "name": "MQT",
+      "expression": "E{#Fila} / (E{#EmProcessamento} / TEMPO_SERVICO)"
+    },
+    {
+      "name": "U",
+      "expression": "100 * E{#EmProcessamento} / NUM_VMS"
+    },
+    {
+      "name": "DP",
+      "expression": "100 * P{#VagasFila = 0}"
+    }
+  ]
+}

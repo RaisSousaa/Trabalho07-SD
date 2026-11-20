@@ -1,0 +1,4 @@
+Configurações de 2, 3 e 4 VMs: CSVs exportados da rodada de 15 combinações.
+Configurações de 5 e 6 VMs: CSVs scenarios-*-1795058026118 a 1795058083735, preservados em novas-configuracoes/segunda-rodada.
+Exceção: 40 tarefas/s e 6 VMs foi obtido por execução individual após aumentar o timeout. Valores transcritos da captura 3b2602c6: U=66.6746%, MRT=0.1142 s, DP=0.0027%, MQT=0.0142 s, TP=40.0047 tarefas/s.
+Esse ponto possui precisão de quatro casas decimais, conforme a interface.

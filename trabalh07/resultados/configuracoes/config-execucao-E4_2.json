@@ -1,0 +1,27 @@
+{
+  "name": "E4.2",
+  "executionType": "spn_stationary_simulation",
+  "simulationTime": 10000,
+  "samplingPoints": 100,
+  "confidenceLevel": 0.95,
+  "maxRelativeError": 0.05,
+  "advancedOptions": {
+    "debug": false,
+    "parallelism": 4,
+    "timeoutMs": 30000,
+    "maxStates": null,
+    "tolerance": 1e-10,
+    "numericPolicy": "stable_f64",
+    "precisionBits": 256,
+    "deterministicReduction": false,
+    "maxAbsoluteError": 0,
+    "repetitions": null,
+    "minSamples": 30,
+    "maxSamples": 250,
+    "warmupTime": 0,
+    "maxEvents": 200000,
+    "seed": null
+  },
+  "createdAt": "2026-11-17T20:13:56.023Z",
+  "updatedAt": "2026-11-17T20:13:56.023Z"
+}
